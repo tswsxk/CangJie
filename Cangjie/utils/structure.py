@@ -2,6 +2,16 @@
 # 2019/12/19 @ tongshiwei
 
 
+import logging
+
+import numpy as np
+
+from longling import as_list
+from longling.lib.stream import rf_open
+
+from tqdm import tqdm
+
+
 def pad_sentences(sentences, padding_word="</s>", sentence_size=25):
     """
     Pads all sentences to the same length. The length is defined by the longest sentence.

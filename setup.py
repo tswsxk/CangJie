@@ -32,6 +32,7 @@ setup(
         'test': test_deps,
     },
     install_requires=mxnet_requires + [
+        'tqdm',
         'longling>=1.3.4',
     ],  # And any other dependencies foo needs
     entry_points={
