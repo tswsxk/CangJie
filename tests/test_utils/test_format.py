@@ -2,8 +2,8 @@
 # 2019/12/19 @ tongshiwei
 
 from longling import path_append
-from Cangjie.utils.format import json2csv, csv2json
-from Cangjie.utils.VecDict import VecDict
+from CangJie.utils.format import json2csv, csv2json
+from CangJie.utils.VecDict import VecDict
 
 
 def test_json_csv(vec_json, tmpdir):

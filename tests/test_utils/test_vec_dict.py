@@ -1,7 +1,7 @@
 # coding: utf-8
 # 2019/12/19 @ tongshiwei
 
-from Cangjie.utils import VecDict
+from CangJie.utils import VecDict
 
 
 def test_vec_dict(vec_json):

@@ -33,6 +33,7 @@ setup(
     },
     install_requires=mxnet_requires + [
         'tqdm',
+        'fire',
         'longling>=1.3.4',
     ],  # And any other dependencies foo needs
     entry_points={
