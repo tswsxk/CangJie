@@ -11,3 +11,7 @@
 ### 反分词
 * gluonnlp.data.NLTKMosesDetokenizer
 
+### padding
+```python
+from gluonnlp.data import FixedBucketSampler, PadSequence
+```
