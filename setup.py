@@ -37,5 +37,8 @@ setup(
         'longling>=1.3.4',
     ],  # And any other dependencies foo needs
     entry_points={
+        "console_scripts": [
+            "cangjie = CangJie.main:cli",
+        ],
     },
 )
