@@ -39,7 +39,7 @@ def load_vec_json(vec_json) -> tuple:
 
 
 class VecDict(object):
-    def __init__(self, token2idx: list, idx2vec: list, idx2token: list):
+    def __init__(self, token2idx: dict, idx2vec: list, idx2token: list):
         assert len(token2idx) == len(idx2vec) == len(idx2token) > 0
 
         self._token2idx = token2idx
