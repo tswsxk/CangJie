@@ -1,8 +1,10 @@
 # coding: utf-8
 # 2019/12/19 @ tongshiwei
 
+import json
 import pytest
 from CangJie.utils import VecDict, seq2idx
+from longling import rf_open
 
 
 def test_vec_dict(vec_json):
@@ -32,3 +34,7 @@ def test_vec_dict(vec_json):
 
 def test_token2idx(token_seq, vec_json):
     seq2idx(token_seq, token_seq + ".idx", vec_json)
+
+    with rf_open(token_seq + ".idx") as f:
+        assert json.loads(f.readline()) == [0, 1]
+        assert json.loads(f.readline()) == [2]
