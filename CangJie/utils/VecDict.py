@@ -1,11 +1,20 @@
 # coding: utf-8
 # 2019/12/19 @ tongshiwei
 
-from longling import rf_open
+from typing import overload
+from longling import rf_open, wf_open
 from tqdm import tqdm
 import json
 
-__all__ = ["load_vec_json", "VecDict"]
+__all__ = ["load_vec_json", "VecDict", "token2idx"]
+
+
+def token2idx(src, tar, vec_json, src_encoding="utf-8", tar_encoding="utf-8"):
+    """convert token sequences in json format into idx sequence in json format"""
+    vec_dict = VecDict.load_from_vec_json(vec_json)
+    with rf_open(src, encoding=src_encoding) as f, wf_open(tar, encoding=tar_encoding) as wf:
+        for line in tqdm(f, desc="converting %s -> %s" % (src, tar)):
+            print(json.dumps(vec_dict.token2idx(json.loads(line))), file=wf)
 
 
 def load_vec_json(vec_json) -> tuple:
@@ -31,10 +40,16 @@ def load_vec_json(vec_json) -> tuple:
 
 
 class VecDict(object):
-    def __init__(self, vec_json):
-        self._token2idx, self._idx2vec, self._idx2token = load_vec_json(vec_json)
+    def __init__(self, _token2idx: list, _idx2vec: list, _idx2token: list):
+        assert len(_token2idx) == len(_idx2vec) == len(_idx2token) > 0
 
-        assert self._token2idx
+        self._token2idx = _token2idx
+        self._idx2vec = _idx2vec
+        self._idx2token = _idx2token
+
+    @staticmethod
+    def load_from_vec_json(vec_json):
+        return VecDict(*load_vec_json(vec_json))
 
     @property
     def size(self):
