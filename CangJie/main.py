@@ -3,6 +3,7 @@
 
 import fire
 
+from CangJie.utils import token2idx
 from CangJie.utils.format import csv2json, json2csv
 
 
@@ -11,6 +12,9 @@ def cli():  # pragma: no cover
         "format": {
             "csv2json": csv2json,
             "json2csv": json2csv,
+        },
+        "utils": {
+            "token2idx": token2idx,
         }
     })
 
