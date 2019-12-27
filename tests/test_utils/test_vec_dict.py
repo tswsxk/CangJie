@@ -2,7 +2,7 @@
 # 2019/12/19 @ tongshiwei
 
 import pytest
-from CangJie.utils import VecDict, token2idx
+from CangJie.utils import VecDict, seq2idx
 
 
 def test_vec_dict(vec_json):
@@ -31,4 +31,4 @@ def test_vec_dict(vec_json):
 
 
 def test_token2idx(token_seq, vec_json):
-    token2idx(token_seq, token_seq + ".idx", vec_json)
+    seq2idx(token_seq, token_seq + ".idx", vec_json)
