@@ -2,11 +2,11 @@
 # 2019/12/19 @ tongshiwei
 
 import pytest
-from CangJie.utils import VecDict
+from CangJie.utils import VecDict, token2idx
 
 
 def test_vec_dict(vec_json):
-    vec_dict = VecDict(vec_json)
+    vec_dict = VecDict.load_from_vec_json(vec_json)
 
     assert vec_dict.size == 4
     assert vec_dict.dim == 3
@@ -28,3 +28,7 @@ def test_vec_dict(vec_json):
 
     with pytest.raises(TypeError):
         vec_dict.token2vec(1)
+
+
+def test_token2idx(token_seq, vec_json):
+    token2idx(token_seq, token_seq + ".idx", vec_json)

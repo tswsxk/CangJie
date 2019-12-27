@@ -8,6 +8,6 @@ from CangJie.utils.VecDict import VecDict
 
 def test_json_csv(vec_json, tmpdir):
     vec_csv = json2csv(vec_json, path_append(tmpdir, "vec.csv", to_str=True))
-    vec_dict = VecDict(csv2json(vec_csv, path_append(tmpdir, "vec.json", to_str=True)))
+    vec_dict = VecDict.load_from_vec_json(csv2json(vec_csv, path_append(tmpdir, "vec.json", to_str=True)))
 
     assert vec_dict["hello"] == [1., 1., 1.]

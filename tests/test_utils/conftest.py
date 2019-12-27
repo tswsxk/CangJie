@@ -12,6 +12,11 @@ _tested_vec_json = [
     [" ", [0., 0., 0.]]
 ]
 
+_test_token_sequence = [
+    ["hello", "仓颉"],
+    ["龙"]
+]
+
 
 @pytest.fixture(scope="module")
 def utils_test_dir(tmp_path_factory):
@@ -23,6 +28,14 @@ def vec_json(utils_test_dir):
     _vec_json = path_append(utils_test_dir, "vec.json", to_str=True)
     with wf_open(_vec_json) as wf:
         for _vec in _tested_vec_json:
-            print(_vec)
             print(json.dumps(_vec), file=wf)
     return _vec_json
+
+
+@pytest.fixture(scope="module")
+def token_seq(utils_test_dir):
+    _token_seq = path_append(utils_test_dir, "token.seq", to_str=True)
+    with wf_open(_token_seq) as wf:
+        for _seq in _test_token_sequence:
+            print(json.dumps(_seq), file=wf)
+    return _token_seq
