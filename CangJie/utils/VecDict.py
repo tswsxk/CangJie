@@ -44,17 +44,37 @@ class VecDict(object):
     def dim(self):
         return len(self._idx2vec[0])
 
-    def idx2vec(self, idx):
-        return self._idx2vec[idx]
+    def idx2vec(self, idx: (int, list)) -> list:
+        if isinstance(idx, int):
+            return self._idx2vec[idx]
+        elif isinstance(idx, list):
+            return [self.idx2vec(_idx) for _idx in idx]
+        else:
+            raise TypeError("Cannot handle %s" % type(idx))
 
-    def token2idx(self, token):
-        return self._token2idx[token]
+    def token2idx(self, token: (str, list)) -> (int, list):
+        if isinstance(token, str):
+            return self._token2idx[token]
+        elif isinstance(token, list):
+            return [self.token2idx(_token) for _token in token]
+        else:
+            raise TypeError("Cannot handle %s" % type(token))
 
-    def idx2token(self, idx):
-        return self._idx2token[idx]
+    def idx2token(self, idx: (int, list)) -> (str, list):
+        if isinstance(idx, int):
+            return self._idx2token[idx]
+        elif isinstance(idx, list):
+            return [self.idx2token(_idx) for _idx in idx]
+        else:
+            raise TypeError("Cannot handle %s" % type(idx))
 
-    def token2vec(self, token):
-        return self.idx2vec(self.token2idx(token))
+    def token2vec(self, token: (str, list)) -> list:
+        if isinstance(token, str):
+            return self.idx2vec(self.token2idx(token))
+        elif isinstance(token, list):
+            return self.idx2vec([self.token2idx(_token) for _token in token])
+        else:
+            raise TypeError("Cannot handle %s" % type(token))
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: (str, list)) -> list:
         return self.token2vec(item)
