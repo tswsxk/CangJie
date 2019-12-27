@@ -1,7 +1,6 @@
 # coding: utf-8
 # 2019/12/19 @ tongshiwei
 
-from typing import overload
 from longling import rf_open, wf_open
 from tqdm import tqdm
 import json
