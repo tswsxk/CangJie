@@ -26,3 +26,12 @@ def json2csv(src, tar, delimiter=','):
             print(("%s" % delimiter).join([token] + list(map(str, vec))), file=wf)
 
     return tar
+
+
+def gensim2json(src, tar):
+    import gensim
+    model = gensim.models.Word2Vec.load(src)
+
+    with wf_open(tar) as wf:
+        for word in tqdm(model.wv.vocab, "gensim2json: %s --> %s" % (src, tar)):
+            print(json.dumps([word, model.wv[word].tolist()]), file=wf)
