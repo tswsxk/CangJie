@@ -15,16 +15,15 @@ def csv2json(src, tar, delimiter=',', skip_first_line=False):
             token = line[0]
             vec = list(map(float, line[1:]))
             print(json.dumps([token, vec]), file=wf)
-
     return tar
 
 
 def json2csv(src, tar, delimiter=','):
     with rf_open(src) as f, wf_open(tar) as wf:
+        writer = csv.writer(wf, delimiter=delimiter)
         for line in f:
             token, vec = json.loads(line)
-            print(("%s" % delimiter).join([token] + list(map(str, vec))), file=wf)
-
+            writer.writerow([token] + list(map(str, vec)))
     return tar
 
 
