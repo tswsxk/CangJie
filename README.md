@@ -7,7 +7,9 @@
 
 ## Chinese Text Classification
 
-Example data
+Example raw data
+
+* `raw`
 
 ```text
 {"raw": "夏末秋初红眼病高发 白领群体患病居高不下", "label": "health"}
@@ -19,11 +21,16 @@ and finally covert this kind of data into the format which our model can handle.
 
 Also, you can do those procedures like tokenize by yourself, but the generated data should followed the following format 
 
+* `processed`
+
 ```text
 {"w": ["$w1", "$w2"],"c":, "rw":, "rc":, "label": 0}
 ```
 
+* `mature`
+
 The data which can be finally inputted into our model is like:
+
 ```text
 {"w": [$w1_idx, $w2_idx, $w3_idx, ...], "c":, "rw": , "rc": "", "label": 0}
 ```
