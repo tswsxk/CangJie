@@ -51,11 +51,11 @@ class VecDict(object):
         return VecDict(*load_vec_json(vec_json))
 
     @property
-    def size(self):
+    def size(self) -> int:
         return len(self._token2idx)
 
     @property
-    def dim(self):
+    def dim(self) -> int:
         return len(self._idx2vec[0])
 
     def idx2vec(self, idx: (int, list)) -> list:
