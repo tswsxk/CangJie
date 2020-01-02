@@ -20,7 +20,7 @@ endif
 
 help:
 
-	@echo "install              install longling"
+	@echo "install              install Cangjie"
 	@echo "test                 run test"
 	@echo "release              publish to PyPI and release in github"
 	@echo "release_test         publish to TestPyPI"
