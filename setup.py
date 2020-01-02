@@ -34,9 +34,10 @@ setup(
     install_requires=mxnet_requires + [
         'tqdm',
         'fire',
-        'longling>=1.3.4',
+        'longling>=1.3.6',
         'gensim',
         'PIL',
+        'gluonnlp',
     ],  # And any other dependencies foo needs
     entry_points={
         "console_scripts": [
