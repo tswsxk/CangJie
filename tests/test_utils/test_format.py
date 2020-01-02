@@ -3,12 +3,12 @@
 
 from longling import path_append
 from CangJie.utils.format import json2csv, csv2json, gensim2json
-from CangJie.utils.VecDict import VecDict
+from CangJie.utils.WVDict import WVDict
 
 
 def test_json_csv(vec_json, tmpdir):
     vec_csv = json2csv(vec_json, path_append(tmpdir, "vec.csv", to_str=True))
-    vec_dict = VecDict.load_from_vec_json(csv2json(vec_csv, path_append(tmpdir, "vec.json", to_str=True)))
+    vec_dict = WVDict.from_file(csv2json(vec_csv, path_append(tmpdir, "vec.json", to_str=True)))
 
     assert vec_dict["hello"] == [1., 1., 1.]
 
@@ -37,7 +37,7 @@ def test_gensim(tmpdir):
 
     gensim2json(gensim_model_bin, vec_json)
 
-    vec_dict = VecDict.load_from_vec_json(vec_json)
+    vec_dict = WVDict.from_file(vec_json)
 
     for word in model.wv.vocab:
         assert model.wv[word].tolist() == vec_dict[word]

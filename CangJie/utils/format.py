@@ -7,7 +7,7 @@ from longling import rf_open, wf_open
 import csv
 
 
-def csv2json(src, tar, delimiter=',', skip_first_line=False):
+def csv2json(src, tar, delimiter=' ', skip_first_line=False):
     with rf_open(src) as f, wf_open(tar) as wf:
         if skip_first_line:  # pragma: no cover
             f.readline()
@@ -18,7 +18,7 @@ def csv2json(src, tar, delimiter=',', skip_first_line=False):
     return tar
 
 
-def json2csv(src, tar, delimiter=','):
+def json2csv(src, tar, delimiter=' '):
     with rf_open(src) as f, wf_open(tar) as wf:
         writer = csv.writer(wf, delimiter=delimiter)
         for line in f:
