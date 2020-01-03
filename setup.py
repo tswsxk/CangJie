@@ -36,7 +36,7 @@ setup(
         'fire',
         'longling>=1.3.6',
         'gensim',
-        'PIL',
+        'Pillow',
         'gluonnlp',
     ],  # And any other dependencies foo needs
     entry_points={
