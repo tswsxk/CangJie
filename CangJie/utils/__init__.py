@@ -2,4 +2,4 @@
 # 2019/12/19 @ tongshiwei
 
 
-from .VecDict import VecDict, seq2idx
+from .WVDict import WVDict, seq2idx
