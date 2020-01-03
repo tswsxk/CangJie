@@ -3,12 +3,12 @@
 
 import json
 import pytest
-from CangJie.utils import VecDict, seq2idx
+from CangJie.utils import WVDict, seq2idx
 from longling import rf_open
 
 
 def test_vec_dict(vec_json):
-    vec_dict = VecDict.load_from_vec_json(vec_json)
+    vec_dict = WVDict.from_file(vec_json)
 
     assert vec_dict.size == 4
     assert vec_dict.dim == 3
