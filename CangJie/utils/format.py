@@ -45,7 +45,7 @@ def gensim2json(src, tar):
             print(json.dumps([word, model.wv[word].tolist()]), file=wf)
 
 
-def gensim2csv(src, tar, delimiter=","):
+def gensim2csv(src, tar, delimiter=" "):
     model = _load_gensim(src)
 
     with wf_open(tar) as wf:
