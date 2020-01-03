@@ -29,6 +29,9 @@ def json2csv(src, tar, delimiter=' '):
 
 def gensim2json(src, tar):
     import gensim
+    import logging
+
+    logging.getLogger("CangJie").info("loading gensim model from %s" % src)
     model = gensim.models.Word2Vec.load(src)
 
     with wf_open(tar) as wf:
