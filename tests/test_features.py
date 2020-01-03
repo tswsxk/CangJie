@@ -3,12 +3,12 @@
 
 import pytest
 from CangJie.Features import Stroke, character_glyph, CDict
-from CangJie import token2stroke, token2radical
+from CangJie import token2stroke, token2radical, char_features
 
 
 def test_features():
     cdict = CDict.from_file()
-    cdict.get_char_features("一", glyph=False)
+    char_features("一")
 
     assert len(cdict.get_stroke("一s")) == 1
     assert len(cdict.get_radical(["一二", "三"])) == 2

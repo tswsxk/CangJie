@@ -7,7 +7,7 @@ from .constants import CHAR, STROKE, RADICAL, GLYPH, PRON
 from .glyph import character_glyph
 from .stroke import token2stroke
 
-__all__ = ["load_dict", "CDict", "token2radical"]
+__all__ = ["load_dict", "CDict", "token2radical", "char_features"]
 
 DEFAULT_DICT = path_append(pathlib.PurePath(__file__).parents[2], "meta_data", "cdict.csv", to_str=True)
 DEFAULT_CDICT = [None]
@@ -78,8 +78,15 @@ class CDict(object):
         raise NotImplementedError
 
 
-def token2radical(token: (str, list)):
+def _get_cdict() -> CDict:
     if DEFAULT_CDICT[0] is None:
         DEFAULT_CDICT[0] = CDict.from_file(DEFAULT_DICT)
+    return DEFAULT_CDICT[0]
 
-    return DEFAULT_CDICT[0].get_radical(token)
+
+def token2radical(token: (str, list)):
+    return _get_cdict().get_radical(token)
+
+
+def char_features(token: (str, list), stroke=True, radical=True, pron=True, glyph=False):
+    return _get_cdict().get_char_features(token, stroke=stroke, radical=radical, pron=pron, glyph=glyph)

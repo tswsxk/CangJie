@@ -3,6 +3,6 @@
 
 from .Features.constants import CHI_CHAR
 from .tokenize import tokenize, characterize
-from .Features import token2radical, token2stroke
+from .Features import token2radical, token2stroke, char_features
 
 from .constants import *
