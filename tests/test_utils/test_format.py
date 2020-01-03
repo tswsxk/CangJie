@@ -2,8 +2,9 @@
 # 2019/12/19 @ tongshiwei
 
 from longling import path_append
-from CangJie.utils.format import json2csv, csv2json, gensim2json
+from CangJie.utils.format import json2csv, csv2json, gensim2json, gensim2csv
 from CangJie.utils.WVDict import WVDict
+from gluonnlp.embedding import TokenEmbedding
 
 
 def test_json_csv(vec_json, tmpdir):
@@ -41,4 +42,12 @@ def test_gensim(tmpdir):
 
     for word in model.wv.vocab:
         assert model.wv[word].tolist() == vec_dict[word]
+        break
+
+    vec_csv = path_append(tmpdir, "vec.csv", to_str=True)
+    gensim2csv(gensim_model_bin, vec_csv, delimiter=' ')
+    vec_dict = TokenEmbedding.from_file(vec_csv)
+
+    for word in model.wv.vocab:
+        assert model.wv[word].tolist() == vec_dict.idx_to_vec[vec_dict.token_to_idx[word]].asnumpy().tolist()
         break

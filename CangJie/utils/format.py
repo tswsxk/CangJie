@@ -27,13 +27,28 @@ def json2csv(src, tar, delimiter=' '):
     return tar
 
 
-def gensim2json(src, tar):
+def _load_gensim(src):
     import gensim
     import logging
 
     logging.getLogger("CangJie").info("loading gensim model from %s" % src)
     model = gensim.models.Word2Vec.load(src)
 
+    return model
+
+
+def gensim2json(src, tar):
+    model = _load_gensim(src)
+
     with wf_open(tar) as wf:
         for word in tqdm(model.wv.vocab, "gensim2json: %s --> %s" % (src, tar)):
             print(json.dumps([word, model.wv[word].tolist()]), file=wf)
+
+
+def gensim2csv(src, tar, delimiter=","):
+    model = _load_gensim(src)
+
+    with wf_open(tar) as wf:
+        writer = csv.writer(wf, delimiter=delimiter)
+        for word in tqdm(model.wv.vocab, "gensim2json: %s --> %s" % (src, tar)):
+            writer.writerow([word] + model.wv[word].tolist())
