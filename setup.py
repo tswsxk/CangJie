@@ -38,6 +38,7 @@ setup(
         'gensim',
         'Pillow',
         'gluonnlp',
+        'jieba',
     ],  # And any other dependencies foo needs
     entry_points={
         "console_scripts": [
