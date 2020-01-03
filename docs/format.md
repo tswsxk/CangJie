@@ -21,4 +21,6 @@ and also convert them to other formats.
 ```text
 $token 1.0 1.0 1.0
 ```
+
+This kind of format can be directly used by [gluonnlp TokenEmbedding](https://gluon-nlp.mxnet.io/api/modules/embedding.html?highlight=tokenembedding#gluonnlp.embedding.TokenEmbedding.from_file)
  
