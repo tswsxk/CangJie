@@ -151,6 +151,7 @@ class WRCLSTM(gluon.HybridBlock):
         self.word_length = word_length
         self.character_length = character_length
 
+
 class WRCEmbedding(gluon.HybridBlock):
     def __init__(self, word_embedding_size, word_radical_embedding_size,
                  char_embedding_size,

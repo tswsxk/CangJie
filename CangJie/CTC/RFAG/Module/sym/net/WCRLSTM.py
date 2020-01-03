@@ -65,11 +65,8 @@ class WCRLSTM(EmbeddingLSTM):
         character_length = self.character_length if self.character_length else len(
             c[0])
 
-        word_embedding, word_radical_embedding, character_embedding, \
-        character_radical_embedding = self.embedding(
-            w, rw, c,
-            rc
-        )
+        word_embedding, word_radical_embedding, character_embedding, character_radical_embedding = self.embedding(w, rw,
+                                                                                                                  c, rc)
 
         merge_outputs = True
         if F is mx.symbol:
@@ -221,8 +218,7 @@ class WCREmbedding(gluon.HybridBlock):
             character_radical_embedding
         )
 
-        return word_embedding, word_radical_embedding, \
-               character_embedding, character_radical_embedding
+        return word_embedding, word_radical_embedding, character_embedding, character_radical_embedding
 
     def set_weight(self, we, rwe, ce, rce):
         self.word_embedding.weight.set_data(we)
