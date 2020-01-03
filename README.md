@@ -24,7 +24,7 @@ Also, you can do those procedures like tokenize by yourself, but the generated d
 * `processed`
 
 ```text
-{"w": ["$w1", "$w2"],"c":, "rw":, "rc":, "label": 0}
+{"w": ["夏末秋", "初", "红眼病", "高发", "白领", "群体", "患病", "居高不下"], "c": [], "rw":, "rc":, "label": 0}
 ```
 
 * `mature`
@@ -35,3 +35,22 @@ The data which can be finally inputted into our model is like:
 {"w": [$w1_idx, $w2_idx, $w3_idx, ...], "c":, "rw": , "rc": "", "label": 0}
 ```
 
+### 实验
+
+```text
+word_embedding_size = 352183
+char_embedding_size = 4746
+```
+
+* 数据集1:
+
+```text
+word_radical_embedding_size = 31759
+char_radical_embedding_size = 242
+```
+
+* 数据集2
+```text
+word_radical_embedding_size = 28771
+char_radical_embedding_size = 235
+```
