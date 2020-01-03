@@ -6,10 +6,11 @@ import fire
 from CangJie.utils import seq2idx
 from CangJie.utils.format import csv2json, json2csv, gensim2json, gensim2csv
 from CangJie.Features import char_features as _char_features
+from pprint import pprint
 
 
 def char_features(token: (str, list), **kwargs):  # pragma: no cover
-    print(_char_features(token, **kwargs))
+    pprint(_char_features(token, **kwargs))
 
 
 def cli():  # pragma: no cover
