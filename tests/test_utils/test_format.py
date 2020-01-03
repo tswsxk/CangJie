@@ -45,7 +45,7 @@ def test_gensim(tmpdir):
         break
 
     vec_csv = path_append(tmpdir, "vec.csv", to_str=True)
-    gensim2csv(gensim_model_bin, vec_csv, delimiter=' ')
+    gensim2csv(gensim_model_bin, vec_csv)
     vec_dict = TokenEmbedding.from_file(vec_csv)
 
     for word in model.wv.vocab:
