@@ -39,6 +39,7 @@ setup(
         'Pillow',
         'gluonnlp',
         'jieba',
+        'numpy',
     ],  # And any other dependencies foo needs
     entry_points={
         "console_scripts": [
