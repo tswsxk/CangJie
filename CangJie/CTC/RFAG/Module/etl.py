@@ -1,10 +1,11 @@
 # coding: utf-8
 # create by tongshiwei on 2019/4/12
 
+import numpy as np
+import logging
 import warnings
-from longling import loading
+from longling import loading, path_append, print_time
 import mxnet as mx
-from mxnet import gluon
 from tqdm import tqdm
 from gluonnlp.embedding import TokenEmbedding
 from gluonnlp.data import FixedBucketSampler, PadSequence
@@ -12,31 +13,26 @@ from gluonnlp.data import FixedBucketSampler, PadSequence
 __all__ = ["extract", "transform", "etl", "pseudo_data_iter"]
 
 
-# todo: define extract-transform-load process and implement the pesudo data iterator for testing
+def load_embedding(vec_root="./", logger=None,
+                   word_embedding_file=None, word_radical_embedding_file=None,
+                   char_embedding_file=None, char_radical_embedding_file=None
+                   ):
+    logger = logging.getLogger("RFAG") if logger is None else logger
 
-def load_embedding(vec_root=VEC_ROOT, logger=logging.getLogger()):
-    """
-
-    Parameters
-    ----------
-    vec_root: str
-    logger: logging.logger
-
-    """
     word_embedding_file = path_append(
         vec_root, "word.vec.dat", to_str=True
-    )
+    ) if word_embedding_file is None else word_embedding_file
     word_radical_embedding_file = path_append(
         vec_root, "word_radical.vec.dat", to_str=True
-    )
+    ) if word_radical_embedding_file is None else word_radical_embedding_file
     char_embedding_file = path_append(
         vec_root, "char.vec.dat", to_str=True
-    )
+    ) if char_embedding_file is None else char_embedding_file
     char_radical_embedding_file = path_append(
         vec_root, "char_radical.vec.dat", to_str=True
-    )
+    ) if char_radical_embedding_file is None else char_radical_embedding_file
 
-    with print_time(logger=logger, task='loading embedding'):
+    with print_time(logger=logger, tips='loading embedding'):
         from multiprocessing.pool import ThreadPool
         pool = ThreadPool(4)
 
@@ -57,8 +53,7 @@ def load_embedding(vec_root=VEC_ROOT, logger=logging.getLogger()):
         char_embedding = p3.get()
         char_radical_embedding = p4.get()
 
-        return word_embedding, word_radical_embedding, \
-               char_embedding, char_radical_embedding
+        return word_embedding, word_radical_embedding, char_embedding, char_radical_embedding
 
 
 def pseudo_data_iter(_cfg):
@@ -72,10 +67,13 @@ def pseudo_data_iter(_cfg):
 
         sentences = pseudo_sentence(1000, 20)
 
-        w = [tokenize(s) for s in sentences]
-        rw = [token2radical(_w) for _w in w]
-        c = [characterize(s) for s in sentences]
-        rc = [token2radical(_c) for _c in c]
+        def feature2num(token):
+            return random.randint(0, 10)
+
+        w = [feature2num(tokenize(s)) for s in sentences]
+        rw = [feature2num(token2radical(_w)) for _w in w]
+        c = [feature2num(characterize(s)) for s in sentences]
+        rc = [feature2num(token2radical(_c)) for _c in c]
 
         labels = [random.randint(0, 32) for _ in sentences]
         features = [w, rw, c, rc]
@@ -85,7 +83,7 @@ def pseudo_data_iter(_cfg):
     return load(transform(pseudo_data_generation(), _cfg), _cfg)
 
 
-def extract(data_src):
+def extract(data_src, embedding_list):
     word_feature = []
     word_radical_feature = []
     char_feature = []
@@ -93,8 +91,13 @@ def extract(data_src):
     features = [word_feature, word_radical_feature, char_feature,
                 char_radical_feature]
     labels = []
+    word_embedding, word_radical_embedding, char_embedding, char_radical_embedding = embedding_list
     for ds in tqdm(loading(data_src), "loading data from %s" % data_src):
         w, rw, c, rc, label = ds['w'], ds['rw'], ds['c'], ds['rc'], ds['label']
+        w = word_embedding.token_to_idx(w)
+        rw = word_embedding.token_to_idx(rw)
+        c = word_embedding.token_to_idx(c)
+        rc = word_embedding.token_to_idx(rc)
         try:
             assert len(w) == len(rw), "some word miss radical"
             assert len(c) == len(rc), "some char miss radical"
@@ -158,22 +161,25 @@ def load(transformed_data, params):
     return transformed_data
 
 
-def etl(filename, params):
-    raw_data = extract(filename)
+def etl(filename, embedding_list, params):
+    raw_data = extract(filename, embedding_list)
     transformed_data = transform(raw_data, params)
     return load(transformed_data, params)
 
 
 if __name__ == '__main__':
     from longling.lib.structure import AttrDict
+    from CangJie import PAD_TOKEN
     import os
 
     filename = "../../../../data/train.json"
     print(os.path.abspath(filename))
 
-    for data in tqdm(extract(filename)):
+    embedding_list = load_embedding("../../../../data/vec/")
+
+    for data in tqdm(extract(filename, embedding_list)):
         pass
 
-    parameters = AttrDict({"batch_size": 128})
-    for data in tqdm(etl(filename, params=parameters)):
+    parameters = AttrDict({"batch_size": 128, "padding": PAD_TOKEN}, num_buckets=100, fixed_length=None)
+    for data in tqdm(etl(filename, embedding_list, params=parameters)):
         pass
