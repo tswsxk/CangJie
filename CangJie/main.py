@@ -4,7 +4,7 @@
 import fire
 
 from CangJie.utils import seq2idx
-from CangJie.utils.format import csv2json, json2csv, gensim2json
+from CangJie.utils.format import csv2json, json2csv, gensim2json, gensim2csv
 
 
 def cli():  # pragma: no cover
@@ -13,6 +13,7 @@ def cli():  # pragma: no cover
             "csv2json": csv2json,
             "json2csv": json2csv,
             "gensim2json": gensim2json,
+            "gensim2csv": gensim2csv
         },
         "utils": {
             "seq2idx": seq2idx,
