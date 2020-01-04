@@ -42,14 +42,25 @@ The data which can be finally inputted into our model is like:
 * 获取词向量 (gensim model)
 ```shell
 # get word embedding vector
-wget https://data.bdaa.pro/datasets/NLP/vec/word_vec_256.bin
+wget https://data.bdaa.pro/datasets/NLP/vec/word.vec.dat.gz
 # get word radical embedding vector
-wget https://data.bdaa.pro/datasets/NLP/vec/word_radical_vec_256.bin
+wget https://data.bdaa.pro/datasets/NLP/vec/word_radical.vec.dat.gz
 # get char embedding vector
-wget https://data.bdaa.pro/datasets/NLP/vec/char_vec_256.bin
+wget https://data.bdaa.pro/datasets/NLP/vec/char.vec.dat.gz
 # get char radical embedding vector
-wget https://data.bdaa.pro/datasets/NLP/vec/char_radical_vec_256.bin
+wget https://data.bdaa.pro/datasets/NLP/vec/char_radical.vec.data.gz
 ```
+
+获得词向量压缩文件后，使用如下命令进行解压
+```shell
+gzip -d $dat.gz
+```
+
+或者可以使用
+```shell
+longling download $url
+```
+来直接获取解压缩后的文件
 
 The dim of all mentioned above embedding vectors are `256`
 
@@ -75,13 +86,4 @@ wget https://data.bdaa.pro/datasets/NLP/ctc/ctc32/test.json
 
 #### 预处理
 
-将词向量转换成统一的`空格`分隔的`csv`格式，第一列为`token`, 其它列为 `vec value`
-
-可以使用 `CangJie` 的命令行工具进行快速转换
-```shell
-cangjie format gensim2csv $gensim_bin_file $target_csv_path
-```
-e.g.,
-```shell
-cangjie format gensim2csv word_vec_256.bin word.vec.dat
-```
+词向量文件均为`空格`分隔的`csv`格式，第一列为`token`, 其它列为 `vec value`
