@@ -2,58 +2,14 @@
 # create by tongshiwei on 2019/4/12
 
 import numpy as np
-import logging
 import warnings
-from longling import loading, path_append, print_time, file_exist
+from longling import loading, path_append
 import mxnet as mx
 from tqdm import tqdm
-from gluonnlp.embedding import TokenEmbedding
 from gluonnlp.data import FixedBucketSampler, PadSequence
+from CangJie.utils.embeddings import load_embedding, token_to_idx
 
 __all__ = ["extract", "transform", "etl", "pseudo_data_iter"]
-
-
-def load_embedding(vec_root="./", logger=None,
-                   word_embedding_file=None, word_radical_embedding_file=None,
-                   char_embedding_file=None, char_radical_embedding_file=None
-                   ):
-    logger = logging.getLogger("RFAG") if logger is None else logger
-
-    word_embedding_file = path_append(
-        vec_root, "word.vec.dat", to_str=True
-    ) if word_embedding_file is None else word_embedding_file
-    word_radical_embedding_file = path_append(
-        vec_root, "word_radical.vec.dat", to_str=True
-    ) if word_radical_embedding_file is None else word_radical_embedding_file
-    char_embedding_file = path_append(
-        vec_root, "char.vec.dat", to_str=True
-    ) if char_embedding_file is None else char_embedding_file
-    char_radical_embedding_file = path_append(
-        vec_root, "char_radical.vec.dat", to_str=True
-    ) if char_radical_embedding_file is None else char_radical_embedding_file
-
-    with print_time(logger=logger, tips='loading embedding'):
-        from multiprocessing.pool import ThreadPool
-        pool = ThreadPool(4)
-
-        p1 = pool.apply_async(TokenEmbedding.from_file,
-                              args=(word_embedding_file,)) if file_exist(word_embedding_file) else None
-        p2 = pool.apply_async(TokenEmbedding.from_file,
-                              args=(word_radical_embedding_file,)) if file_exist(word_radical_embedding_file) else None
-        p3 = pool.apply_async(TokenEmbedding.from_file,
-                              args=(char_embedding_file,)) if file_exist(char_embedding_file) else None
-        p4 = pool.apply_async(TokenEmbedding.from_file,
-                              args=(char_radical_embedding_file,)) if file_exist(char_radical_embedding_file) else None
-
-        pool.close()
-        pool.join()
-
-        word_embedding = p1.get() if p1 else None
-        word_radical_embedding = p2.get() if p2 else None
-        char_embedding = p3.get() if p3 else None
-        char_radical_embedding = p4.get() if p4 else None
-
-        return word_embedding, word_radical_embedding, char_embedding, char_radical_embedding
 
 
 def pseudo_data_iter(_cfg):
@@ -83,7 +39,7 @@ def pseudo_data_iter(_cfg):
     return load(transform(pseudo_data_generation(), _cfg), _cfg)
 
 
-def extract(data_src, embedding_list):
+def extract(data_src, embeddings):
     word_feature = []
     word_radical_feature = []
     char_feature = []
@@ -91,13 +47,13 @@ def extract(data_src, embedding_list):
     features = [word_feature, word_radical_feature, char_feature,
                 char_radical_feature]
     labels = []
-    word_embedding, word_radical_embedding, char_embedding, char_radical_embedding = embedding_list
     for ds in tqdm(loading(data_src), "loading data from %s" % data_src):
-        w, rw, c, rc, label = ds['w'], ds['rw'], ds['c'], ds['rc'], ds['label']
-        w = word_embedding.token_to_idx(w)
-        rw = word_embedding.token_to_idx(rw)
-        c = word_embedding.token_to_idx(c)
-        rc = word_embedding.token_to_idx(rc)
+        label = ds['label']
+
+        w = token_to_idx(embeddings["w"], ds["w"]) if embeddings.get("w") and "w" in ds else []
+        rw = token_to_idx(embeddings["rw"], ds["rw"]) if embeddings.get("rw") and "rw" in ds else []
+        c = token_to_idx(embeddings["rw"], ds["rw"]) if embeddings.get("c") and "c" in ds else []
+        rc = token_to_idx(embeddings["rw"], ds["rw"]) if embeddings.get("rc") and "rc" in ds else []
         try:
             assert len(w) == len(rw), "some word miss radical"
             assert len(c) == len(rc), "some char miss radical"
@@ -161,8 +117,8 @@ def load(transformed_data, params):
     return transformed_data
 
 
-def etl(filename, embedding_list, params):
-    raw_data = extract(filename, embedding_list)
+def etl(filename, embeddings, params):
+    raw_data = extract(filename, embeddings)
     transformed_data = transform(raw_data, params)
     return load(transformed_data, params)
 
@@ -172,14 +128,22 @@ if __name__ == '__main__':
     from CangJie import PAD_TOKEN
     import os
 
-    filename = "../../../../data/train.json"
+    filename = "../../../../data/ctc32/train.json"
     print(os.path.abspath(filename))
 
-    embedding_list = load_embedding("../../../../data/vec/")
+    vec_root = "../../../../data/vec/"
+    _embeddings = load_embedding(
+        {
+            "w": path_append(vec_root, "word.vec.dat"),
+            "rw": path_append(vec_root, "word_radical.vec.dat"),
+            "c": path_append(vec_root, "char.vec.dat"),
+            "rc": path_append(vec_root, "char_radical.vec.dat")
+        }
+    )
 
-    for data in tqdm(extract(filename, embedding_list)):
+    for data in tqdm(extract(filename, _embeddings)):
         pass
 
     parameters = AttrDict({"batch_size": 128, "padding": PAD_TOKEN}, num_buckets=100, fixed_length=None)
-    for data in tqdm(etl(filename, embedding_list, params=parameters)):
+    for data in tqdm(etl(filename, _embeddings, params=parameters)):
         pass
