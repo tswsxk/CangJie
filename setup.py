@@ -34,7 +34,7 @@ setup(
     install_requires=mxnet_requires + [
         'tqdm',
         'fire',
-        'longling>=1.3.6',
+        'longling>=1.3.7',
         'gensim',
         'Pillow',
         'gluonnlp',
