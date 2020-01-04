@@ -4,7 +4,7 @@
 import numpy as np
 import logging
 import warnings
-from longling import loading, path_append, print_time
+from longling import loading, path_append, print_time, file_exist
 import mxnet as mx
 from tqdm import tqdm
 from gluonnlp.embedding import TokenEmbedding
@@ -37,21 +37,21 @@ def load_embedding(vec_root="./", logger=None,
         pool = ThreadPool(4)
 
         p1 = pool.apply_async(TokenEmbedding.from_file,
-                              args=(word_embedding_file,))
+                              args=(word_embedding_file,)) if file_exist(word_embedding_file) else None
         p2 = pool.apply_async(TokenEmbedding.from_file,
-                              args=(word_radical_embedding_file,))
+                              args=(word_radical_embedding_file,)) if file_exist(word_radical_embedding_file) else None
         p3 = pool.apply_async(TokenEmbedding.from_file,
-                              args=(char_embedding_file,))
+                              args=(char_embedding_file,)) if file_exist(char_embedding_file) else None
         p4 = pool.apply_async(TokenEmbedding.from_file,
-                              args=(char_radical_embedding_file,))
+                              args=(char_radical_embedding_file,)) if file_exist(char_radical_embedding_file) else None
 
         pool.close()
         pool.join()
 
-        word_embedding = p1.get()
-        word_radical_embedding = p2.get()
-        char_embedding = p3.get()
-        char_radical_embedding = p4.get()
+        word_embedding = p1.get() if p1 else None
+        word_radical_embedding = p2.get() if p2 else None
+        char_embedding = p3.get() if p3 else None
+        char_radical_embedding = p4.get() if p4 else None
 
         return word_embedding, word_radical_embedding, char_embedding, char_radical_embedding
 
