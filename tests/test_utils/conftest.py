@@ -4,12 +4,13 @@
 from longling import path_append, wf_open
 import pytest
 import json
+from CangJie.utils.format import json2csv
 
 _tested_vec_json = [
     ["hello", [1., 1., 1.]],
     ["仓颉", [0., 0., 0.]],
     ["龙", [1., 1., 0.]],
-    [" ", [0., 0., 0.]]
+    ["枫叶", [0., 0., 0.]]
 ]
 
 _test_token_sequence = [
@@ -30,6 +31,13 @@ def vec_json(utils_test_dir):
         for _vec in _tested_vec_json:
             print(json.dumps(_vec), file=wf)
     return _vec_json
+
+
+@pytest.fixture(scope="module")
+def vec_csv(utils_test_dir, vec_json):
+    _vec_csv = path_append(utils_test_dir, "vec.csv", to_str=True)
+    json2csv(vec_json, _vec_csv)
+    return _vec_csv
 
 
 @pytest.fixture(scope="module")
