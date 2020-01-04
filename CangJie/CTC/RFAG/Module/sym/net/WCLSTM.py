@@ -8,15 +8,15 @@ from .net import EmbeddingLSTM
 
 class WCLSTM(EmbeddingLSTM):
     def __init__(self, net_type,
-                 class_num, lstm_hidden, embedding_dim,
-                 word_embedding_size, char_embedding_size,
+                 class_num, embedding_dim,
+                 word_embedding_size, char_embedding_size, lstm_hidden=None,
                  embed_dropout=0.5, fc_dropout=0.5,
                  **kwargs):
         r"""Baseline: 仅包含词和字，不包括部首的网络模型"""
         super(WCLSTM, self).__init__(**kwargs)
         self.word_length = None
         self.character_length = None
-        self.lstm_hidden = lstm_hidden
+        self.lstm_hidden = lstm_hidden if lstm_hidden is not None else embedding_dim
         self.net_type = net_type
 
         with self.name_scope():

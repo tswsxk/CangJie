@@ -9,16 +9,17 @@ from mxnet import gluon
 class WRCLSTM(gluon.HybridBlock):
     def __init__(self,
                  net_type,
-                 class_num, lstm_hidden, embedding_dim,
+                 class_num, embedding_dim,
                  word_embedding_size, word_radical_embedding_size,
                  char_embedding_size,
+                 lstm_hidden=None,
                  embed_dropout=0.5, fc_dropout=0.5,
                  **kwargs):
         r"""Our method: 包含词和字，以及字、词部首的网络模型"""
         super(WRCLSTM, self).__init__(**kwargs)
         self.word_length = None
         self.character_length = None
-        self.lstm_hidden = lstm_hidden
+        self.lstm_hidden = lstm_hidden if lstm_hidden is not None else embedding_dim
         self.net_type = net_type
 
         with self.name_scope():
