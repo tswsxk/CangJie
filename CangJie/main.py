@@ -15,12 +15,10 @@ def char_features(token: (str, list), **kwargs):  # pragma: no cover
 
 def cli():  # pragma: no cover
     fire.Fire({
-        "format": {
-            "csv2json": csv2json,
-            "json2csv": json2csv,
-            "gensim2json": gensim2json,
-            "gensim2csv": gensim2csv
-        },
+        "csv2json": csv2json,
+        "json2csv": json2csv,
+        "gensim2json": gensim2json,
+        "gensim2csv": gensim2csv,
         "utils": {
             "seq2idx": seq2idx,
         },
