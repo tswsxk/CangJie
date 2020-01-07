@@ -22,4 +22,4 @@ def get_net(model_type, class_num, embedding_dim, net_type="lstm", **kwargs):
 
 
 def get_bp_loss(**kwargs):
-    return {"L2Loss": gluon.loss.L2Loss(**kwargs)}
+    return {"cross-entropy": gluon.loss.SoftmaxCrossEntropyLoss()}

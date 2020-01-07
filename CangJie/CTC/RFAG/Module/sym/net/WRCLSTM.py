@@ -32,12 +32,12 @@ class WRCLSTM(gluon.HybridBlock):
                 if self.net_type in ("bilstm", "bilstm_att"):
                     setattr(self, "rnn%s" % i,
                             gluon.rnn.BidirectionalCell(
-                                gluon.rnn.LSTMCell(lstm_hidden),
-                                gluon.rnn.LSTMCell(lstm_hidden))
+                                gluon.rnn.LSTMCell(self.lstm_hidden),
+                                gluon.rnn.LSTMCell(self.lstm_hidden))
                             )
                 elif self.net_type == "lstm":
                     setattr(
-                        self, "rnn%s" % i, gluon.rnn.LSTMCell(lstm_hidden),
+                        self, "rnn%s" % i, gluon.rnn.LSTMCell(self.lstm_hidden),
                     )
                 else:
                     raise TypeError(
@@ -47,7 +47,7 @@ class WRCLSTM(gluon.HybridBlock):
 
             if self.net_type == "bilstm_att":
                 self.word_attention = DotProductAttentionCell(
-                    units=lstm_hidden, scaled=False
+                    units=self.lstm_hidden, scaled=False
                 )
 
             self.dropout = gluon.nn.Dropout(fc_dropout)

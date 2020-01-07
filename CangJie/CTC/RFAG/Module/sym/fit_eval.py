@@ -12,7 +12,7 @@ from longling.ML.MxnetHelper.toolkit.ctx import split_and_load
 
 def _fit_f(_net, _data, bp_loss_f, loss_function, loss_monitor):
     word, word_radical, char, char_radical, word_mask, char_mask, label = _data
-    output = _net(word, char, word_mask, char_mask)
+    output = _net(word, word_radical, char, char_radical, word_mask, char_mask)
 
     bp_loss = None
     for name, func in loss_function.items():
@@ -58,7 +58,7 @@ def eval_f(_net, test_data, ctx=mx.cpu()):
         for (word, word_radical, char, char_radical, word_mask,
              char_mask, label) in ctx_data:
             output = _net(
-                word, char, word_mask, char_mask
+                word, word_radical, char, char_radical, word_mask, char_mask
             )
             pred = mx.nd.argmax(output, axis=1)
             ground_truth.extend(label.asnumpy().tolist())

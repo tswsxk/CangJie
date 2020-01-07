@@ -30,14 +30,14 @@ class WCLSTM(EmbeddingLSTM):
                 if self.net_type == "lstm":
                     setattr(
                         self, "rnn%s" % i,
-                        gluon.rnn.LSTMCell(lstm_hidden)
+                        gluon.rnn.LSTMCell(self.lstm_hidden)
                     )
                 elif self.net_type == "bilstm":
                     setattr(
                         self, "rnn%s" % i,
                         gluon.rnn.BidirectionalCell(
-                            gluon.rnn.LSTMCell(lstm_hidden),
-                            gluon.rnn.LSTMCell(lstm_hidden)
+                            gluon.rnn.LSTMCell(self.lstm_hidden),
+                            gluon.rnn.LSTMCell(self.lstm_hidden)
                         )
                     )
                 else:
@@ -131,6 +131,6 @@ class WCEmbedding(gluon.HybridBlock):
 
         return word_embedding, character_embedding
 
-    def set_weight(self, we, ce):
-        self.word_embedding.weight.set_data(we)
-        self.char_embedding.weight.set_data(ce)
+    def set_weight(self, embeddings):
+        self.word_embedding.weight.set_data(embeddings["w"])
+        self.char_embedding.weight.set_data(embeddings["c"])

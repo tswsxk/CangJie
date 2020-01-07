@@ -24,12 +24,17 @@ def pseudo_data_iter(_cfg):
         sentences = pseudo_sentence(1000, 20)
 
         def feature2num(token):
-            return random.randint(0, 10)
+            if isinstance(token, list):
+                return [feature2num(_token) for _token in token]
+            else:
+                return random.randint(0, 10)
 
-        w = [feature2num(tokenize(s)) for s in sentences]
+        w = [list(tokenize(s)) for s in sentences]
         rw = [feature2num(token2radical(_w)) for _w in w]
-        c = [feature2num(characterize(s)) for s in sentences]
+        w = [feature2num(_w) for _w in w]
+        c = [characterize(s) for s in sentences]
         rc = [feature2num(token2radical(_c)) for _c in c]
+        c = [feature2num(_c) for _c in c]
 
         labels = [random.randint(0, 32) for _ in sentences]
         features = [w, rw, c, rc]
@@ -52,11 +57,17 @@ def extract(data_src, embeddings):
 
         w = token_to_idx(embeddings["w"], ds["w"]) if embeddings.get("w") and "w" in ds else []
         rw = token_to_idx(embeddings["rw"], ds["rw"]) if embeddings.get("rw") and "rw" in ds else []
-        c = token_to_idx(embeddings["rw"], ds["rw"]) if embeddings.get("c") and "c" in ds else []
+        c = token_to_idx(embeddings["c"], ds["c"]) if embeddings.get("c") and "c" in ds else []
         rc = token_to_idx(embeddings["rw"], ds["rw"]) if embeddings.get("rc") and "rc" in ds else []
+
+        if len(w) < 1:
+            continue
+
         try:
-            assert len(w) == len(rw), "some word miss radical"
-            assert len(c) == len(rc), "some char miss radical"
+            if rw:
+                assert len(w) == len(rw), "some word miss radical"
+            if rc:
+                assert len(c) == len(rc), "some char miss radical"
         except AssertionError as e:
             warnings.warn("%s" % e)
             continue
