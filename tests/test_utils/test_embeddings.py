@@ -2,7 +2,7 @@
 # 2020/1/4 @ tongshiwei
 
 from gluonnlp.embedding import TokenEmbedding
-from CangJie.utils.embeddings import load_embedding, token_to_idx
+from CangJie.utils.embeddings import load_embedding, token_to_idx, get_embedding_size, get_embedding_array
 
 
 def test_load_embeddings(vec_csv, tmpdir):
@@ -14,3 +14,6 @@ def test_load_embeddings(vec_csv, tmpdir):
     assert isinstance(embeddings["b"], TokenEmbedding)
 
     token_to_idx(embeddings["a"], ["仓颉", "龙"])
+
+    get_embedding_size(embeddings)
+    get_embedding_array(embeddings)
