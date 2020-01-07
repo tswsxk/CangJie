@@ -141,15 +141,11 @@ def sym_run(stage: (int, str) = "viz"):  # pragma: no cover
             "$data_dir/test.json",
             "w:$vec_dir/word.vec.dat,c:$vec_dir/char.vec.dat",
             ctx=mx.cpu(),
-            optimizer_params={
-                "learning_rate": 0.001
-            },
             hyper_params={
                 "model_type": "wclstm",
                 "class_num": 32,
                 "embedding_dim": 256,
             },
-            batch_size=16,
             root="../../../..",
             dataset="ctc32",
             data_dir="$root_data_dir"
