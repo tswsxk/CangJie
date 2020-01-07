@@ -178,16 +178,14 @@ class TokenEmbedding(GluonNLPTE):  # pragma: no cover
 
 
 def load_embedding(embeddings: dict, logger=None) -> dict:
-    logger = logging.getLogger("RFAG") if logger is None else logger
     assert isinstance(embeddings, dict)
 
     from multiprocessing.pool import ThreadPool
     pool = ThreadPool(len(embeddings))
     _ret = dict()
 
-    with print_time(logger=logger, tips='loading embedding'):
-        for k, v in embeddings.items():
-            _ret[k] = pool.apply_async(TokenEmbedding.from_file, args=(v,))
+    for k, v in embeddings.items():
+        _ret[k] = pool.apply_async(TokenEmbedding.from_file, args=(v,))
 
     pool.close()
     pool.join()
@@ -196,3 +194,28 @@ def load_embedding(embeddings: dict, logger=None) -> dict:
         _ret[k] = v.get()
 
     return _ret
+
+
+def get_embedding_size(embeddings: dict):
+    _ret = dict()
+    for k, v in embeddings.items():
+        _ret[k] = len(v.idx_to_vec)
+
+    return _ret
+
+
+def get_embedding_array(embeddings: dict):
+    _ret = dict()
+    for k, v in embeddings.items():
+        _ret[k] = v.idx_to_vec
+
+    return _ret
+
+
+def token_to_idx(embedding: GluonNLPTE, token: (str, list)):
+    if isinstance(token, str):
+        return embedding.token_to_idx[token]
+    elif isinstance(token, list):
+        return [token_to_idx(embedding, e) for e in token]
+    else:
+        raise TypeError("cannot handle %s" % type(token))
