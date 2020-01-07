@@ -9,8 +9,8 @@ from .net import EmbeddingLSTM
 class WCLSTM(EmbeddingLSTM):
     def __init__(self, net_type,
                  class_num, embedding_dim,
-                 word_embedding_size, char_embedding_size, lstm_hidden=None,
-                 embed_dropout=0.5, fc_dropout=0.5,
+                 lstm_hidden=None,
+                 embed_dropout=0.5, fc_dropout=0.5, embedding_size=None,
                  **kwargs):
         r"""Baseline: 仅包含词和字，不包括部首的网络模型"""
         super(WCLSTM, self).__init__(**kwargs)
@@ -21,8 +21,8 @@ class WCLSTM(EmbeddingLSTM):
 
         with self.name_scope():
             self.embedding = WCEmbedding(
-                word_embedding_size=word_embedding_size,
-                char_embedding_size=char_embedding_size,
+                word_embedding_size=embedding_size["w"],
+                char_embedding_size=embedding_size["c"],
                 embedding_dim=embedding_dim,
                 dropout=embed_dropout,
             )

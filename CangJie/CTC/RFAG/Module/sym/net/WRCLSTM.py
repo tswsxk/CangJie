@@ -10,9 +10,7 @@ class WRCLSTM(gluon.HybridBlock):
     def __init__(self,
                  net_type,
                  class_num, embedding_dim,
-                 word_embedding_size, word_radical_embedding_size,
-                 char_embedding_size,
-                 lstm_hidden=None,
+                 lstm_hidden=None, embedding_size=None,
                  embed_dropout=0.5, fc_dropout=0.5,
                  **kwargs):
         r"""Our method: 包含词和字，以及字、词部首的网络模型"""
@@ -24,9 +22,9 @@ class WRCLSTM(gluon.HybridBlock):
 
         with self.name_scope():
             self.embedding = WRCEmbedding(
-                word_embedding_size=word_embedding_size,
-                word_radical_embedding_size=word_radical_embedding_size,
-                char_embedding_size=char_embedding_size,
+                word_embedding_size=embedding_size["w"],
+                word_radical_embedding_size=embedding_size["rw"],
+                char_embedding_size=embedding_size["rc"],
                 embedding_dim=embedding_dim,
                 dropout=embed_dropout,
             )
