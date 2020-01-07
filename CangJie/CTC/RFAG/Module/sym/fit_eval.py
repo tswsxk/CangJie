@@ -12,12 +12,10 @@ from longling.ML.MxnetHelper.toolkit.ctx import split_and_load
 
 def _fit_f(_net, _data, bp_loss_f, loss_function, loss_monitor):
     word, word_radical, char, char_radical, word_mask, char_mask, label = _data
-    # todo modify the input to net
     output = _net(word, char, word_mask, char_mask)
 
     bp_loss = None
     for name, func in loss_function.items():
-        # todo modify the input to func
         loss = func(output, label)
         if name in bp_loss_f:
             bp_loss = loss
@@ -112,5 +110,4 @@ def fit_f(net, batch_size, batch_data,
             )
             assert bp_loss is not None
             bp_loss.backward()
-    # todo: confirm whether the train step is equal to batch_size
     trainer.step(batch_size)
