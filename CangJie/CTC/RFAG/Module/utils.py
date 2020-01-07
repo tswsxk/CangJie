@@ -7,7 +7,7 @@ def parse_vec_files(vec_files_str: str):
     Examples
     --------
     >>> parse_vec_files("w:123,c:456")
-    {"w": 123, "c": 456}
+    {'w': '123', 'c': '456'}
     """
     _ret = dict()
     vec_key_value = vec_files_str.split(",")
